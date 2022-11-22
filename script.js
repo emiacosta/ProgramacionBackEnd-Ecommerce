@@ -22,12 +22,12 @@ class ProductManager{
         if(!this.existsProduct(code)){
             const product = {
                 id: this.getNextID(),
-                code: code ?? 0,
-                title: title ?? "",
-                description: description ?? "",
-                price: price ?? 0.0,
-                thumbnail: thumbnail ?? "",
-                stock: stock ?? 0
+                code: code,
+                title: title,
+                description: description,
+                price: price,
+                thumbnail: thumbnail,
+                stock: stock
             }
             this.products.push(product);
         }else{
