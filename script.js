@@ -14,13 +14,13 @@ class ProductManager{
         return this.products.find((prod) => prod.id == id) ?? "Not Found";
     }
 
-    addProduct(title, description, price, thumnail, code, stock) {
+    addProduct(title, description, price, thumbnail, code, stock) {
         const newProduct={
             id: this.getNextId(),
             title,
             description,
             price,
-            thumnail,
+            thumbnail,
             code,
             stock
         }
