@@ -83,38 +83,4 @@ class ProductManager {
     }
 }
 
-async function run() {
-
-    const productosControlador = new ProductManager("productos.json")
-    console.table(await productosControlador.getProducts())
-
-    await productosControlador.addProduct("Batidora", "Batidora para tus postres favoritos", 300, "http://url.com", 12521, 30)
-    await productosControlador.addProduct("Oso de peluche", "Oso color rojo", 50, "http://url.com", 33244, 43)
-    await productosControlador.addProduct("Lapicera con luz", "Lapicera de punta fina con luz", 4, "http://url.com", 24432, 100)
-
-    console.table(await productosControlador.getProducts())
-
-    // Intentando ingresar sin el campo stock.
-    await productosControlador.addProduct("Lapicera con luz", "Lapicera de punta fina con luz", 4, "http://url.com", 24432)
-
-    //Intentando ingresar el mismo producto con el 'code' repetido.
-    await productosControlador.addProduct("Lapicera Negra", "Para escribir lo que quieras", 2, "http://url.com", 24432, 100)
-
-    // Actualizando datos de un producto.
-    await productosControlador.updateProductById(3, "Lapicera roja", "Para escribir lo que quieras", 2, "http://url.com", 24432, 100);
-    console.table(await productosControlador.getProductById(3));
-
-    //Not found
-    console.table(await productosControlador.getProductById(4));
-
-    console.table(await productosControlador.getProducts())
-
-    // Eliminar producto con Id 3
-    await productosControlador.deleteProductById(3)
-
-    console.table(await productosControlador.getProducts())
-
-    console.table(await productosControlador.getProductById(3));
-}
-
-run()
+module.exports = ProductManager;
