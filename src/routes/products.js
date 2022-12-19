@@ -11,15 +11,9 @@ const routerProducts = express.Router();
 routerProducts.get('/', async (req, res) => {
     const products = await manager.getProducts()
     let limit = req.query.limit
-    if (!limit) res.send({products})
-    else {
-        const prodLimit = [];
-        if (limit > products.length) limit = products.length;
-        for (let index = 0; index < limit; index++) {
-            prodLimit.push(products[index]);
-        }
-        res.send({prodLimit})
-    }
+    if(limit) products.splice(limit)
+    
+    res.json(products)
 })
 routerProducts.get('/:id', getProducts);
 routerProducts.post('/', addProduct);
