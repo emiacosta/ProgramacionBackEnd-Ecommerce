@@ -2,21 +2,12 @@ const { Container } = require('../container.js');
 
 const carts = new Container('./data/carts.json');
 
-const addCart = (prodId, res) => {
-	const existe = carts.some(prod => prod.id === prodId);
-        if (existe){
-            const prod = carts.map(prod =>{
-                if (prod.id === prodId){
-                    prod.cantidad++
-                }
-            })
-        } else{
-            const item = products.find((prod => prod.id === prodId))
-            carts.push(item)
-			res.json({ message: 'Carrito agregado' });
-        }
+const addCart = (req, res) => {
+	const products = req.body;
+	if (!products) return carts.saveCart([]);
+	carts.saveCart(products);
+	res.json({ message: 'Carrito agregado' });
 };
-
 
 const deleteCart = (req, res) => {
 	const id = Number(req.params.id);
