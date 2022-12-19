@@ -1,31 +1,27 @@
 const express = require('express');
+const path = require('path');
+const routerProducts = require('./routes/products.js');
+const routerCart = require('./routes/carts.js');
+
 const app = express();
+const PORT = process.env.PORT || 8080;
 
-const ProductManager = require('./productmanager')
-const manager = new ProductManager('./productos.json');
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
+app.use('/api/products', routerProducts);
+app.use('/api/carts', routerCart);
 
-app.get('/products', async (req, res) => {
-    const products = await manager.getProducts()
-    let limit = req.query.limit
-    if (!limit) res.send({products})
-    else {
-        const prodLimit = [];
-        if (limit > products.length) limit = products.length;
-        for (let index = 0; index < limit; index++) {
-            prodLimit.push(products[index]);
-        }
-        res.send({prodLimit})
-    }
-})
-
-app.get('/products/:pid', async (req, res) => {
-    const id = req.params.pid
-    const product = await manager.getProductById(id)
-    res.send({product})
-})
-
-
-app.listen(8080, ()=>{
-    console.log("Server listening on port 8080...");
+app.use('*', (req, res) => {
+    path = req.params;
+    const method = req.method;
+    res.send({
+        error: -2,
+        description: `ruta '${path[0]}' método '${method}' no implementada`
+    });
 });
+
+const server = app.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}`)
+});
+server.on('error', error => { console.log(`Error ${error}`) });
