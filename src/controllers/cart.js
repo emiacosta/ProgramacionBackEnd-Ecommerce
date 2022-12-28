@@ -1,15 +1,15 @@
-const { Container } = require('../container.js');
+import Container  from "../container.js";
 
 const carts = new Container('./data/carts.json');
 
-const addCart = (req, res) => {
+export const addCart = (req, res) => {
 	const products = req.body;
 	if (!products) return carts.saveCart([]);
 	carts.saveCart(products);
 	res.json({ message: 'Carrito agregado' });
 };
 
-const deleteCart = (req, res) => {
+export const deleteCart = (req, res) => {
 	const id = Number(req.params.id);
 	if (isNaN(id))
 		return res
@@ -23,7 +23,7 @@ const deleteCart = (req, res) => {
 	res.json({ message: 'Carrito eliminado' });
 };
 
-const getProducts = (req, res) => {
+export const getProducts = (req, res) => {
 	const id = Number(req.params.id);
 	if (isNaN(id))
 		return res
@@ -37,7 +37,7 @@ const getProducts = (req, res) => {
 	res.json({ Productos: cartSelected.products });
 };
 
-const addProductToCart = (req, res) => {
+export const addProductToCart = (req, res) => {
 	const idCartSelected = Number(req.params.id);
 	if (isNaN(idCartSelected))
 		return res
@@ -50,7 +50,7 @@ const addProductToCart = (req, res) => {
 	res.json({ message: productSaved });
 };
 
-const deleteProduct = (req, res) => {
+export const deleteProduct = (req, res) => {
 	const id = Number(req.params.id);
 	const id_prod = Number(req.params.id_prod);
 	if (isNaN(id) || isNaN(id_prod))
@@ -61,12 +61,4 @@ const deleteProduct = (req, res) => {
 	if (productDeleted == -1 || !productDeleted)
 		return res.status(404).send({ message: 'Error' });
 	res.json({ message: 'Producto eliminado' });
-};
-
-module.exports = {
-	addCart,
-	deleteCart,
-	getProducts,
-	addProductToCart,
-	deleteProduct
 };

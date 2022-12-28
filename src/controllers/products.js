@@ -1,6 +1,6 @@
-const { products } = require('../container.js');
+import { products } from '../container.js';
 
-const getProducts = (req, res) => {
+export const getProducts = (req, res) => {
 	if (req.params.id == undefined)
 		return res.json({ products: products.getAll() });
 	const id = Number(req.params.id);
@@ -12,13 +12,13 @@ const getProducts = (req, res) => {
 	res.status(200).json(product);
 };
 
-const addProduct = (req, res) => {
+export const addProduct = (req, res) => {
 	const { title, descripcion, code, foto, price, stock } = req.body;
 	products.save({ title, descripcion, code, foto, price, stock });
 	res.status(200).json({ message: 'Producto agregado' });
 };
 
-const updateProduct = (req, res) => {
+export const updateProduct = (req, res) => {
 	const id = Number(req.params.id);
 	if (id < 0 || id > products.objects.length)
 		return res
@@ -32,7 +32,7 @@ const updateProduct = (req, res) => {
 	res.json({ message: 'Producto actualizado' });
 };
 
-const deleteProduct = (req, res) => {
+export const deleteProduct = (req, res) => {
 	const id = Number(req.params.id);
 	if (isNaN(id))
 		return res
@@ -44,11 +44,4 @@ const deleteProduct = (req, res) => {
 			.status(404)
 			.json({ message: 'El ID no pertenece a un producto listado' });
 	res.json({ message: 'Producto eliminado' });
-};
-
-module.exports = {
-	getProducts,
-	addProduct,
-	updateProduct,
-	deleteProduct
 };

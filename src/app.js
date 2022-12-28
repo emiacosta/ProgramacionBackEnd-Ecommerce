@@ -1,27 +1,36 @@
-const express = require('express');
-const path = require('path');
-const routerProducts = require('./routes/products.js');
-const routerCart = require('./routes/carts.js');
+import express from 'express';
+import handlebars from 'express-handlebars';
+import { Server } from 'socket.io';
+import __dirname from './utils.js';
+
+import productsRouter from './routes/products.router.js';
+import cartsRouter from './routes/carts.router.js';
 
 const app = express();
-const PORT = process.env.PORT || 8080;
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-app.use('/api/products', routerProducts);
-app.use('/api/carts', routerCart);
-
-app.use('*', (req, res) => {
-    path = req.params;
-    const method = req.method;
-    res.send({
-        error: -2,
-        description: `ruta '${path[0]}' método '${method}' no implementada`
-    });
+const httpServer = app.listen(8080, ()=>{
+    console.log("Server listening on port 8080...");
 });
 
-const server = app.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}`)
-});
-server.on('error', error => { console.log(`Error ${error}`) });
+const socketServer = new Server(httpServer)
+
+app.use(express.json())
+app.use(express.static(__dirname + '/public/'))
+
+app.engine('handlebars', handlebars.engine())
+app.set('views', __dirname + '/views');
+app.set('view engine', 'handlebars')
+
+//Utilizamos este Middleware genérico para enviar la instancia del servidor de Socket.io a las routes
+app.use((req, res, next)=>{
+    req.io = socketServer
+    next()
+})
+app.use('/api/products', productsRouter)
+app.use('/api/carts', cartsRouter)
+
+socketServer.on('connection', socket =>{
+    console.log(socket.id);
+    socket.on('msg_front', message => console.log(message));
+    socket.emit('msg_back',"Conectado al servicio. Bienvenido desde el Back")
+})
